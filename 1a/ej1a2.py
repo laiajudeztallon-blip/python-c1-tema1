@@ -29,7 +29,15 @@ def get_user_ip_json():
     # 3. Convertir la respuesta a formato JSON
     # 4. Extraer y devolver la IP del campo "ip" del objeto JSON
     # 5. Devolver None si hay algún error
-    pass
+    try:
+        response = requests.get('https://api.ipify.org?format=json')
+        if response.status_code == 200:
+            json_response = response.json()
+            return json_response['ip']
+        return None
+    except Exception as e:
+        print(f"Error obteniendo o leyendo la respuesta: {e}")
+        return None
 
 def get_response_info():
     """
@@ -48,7 +56,18 @@ def get_response_info():
     #    - 'elapsed_time': El tiempo que tardó la petición (en milisegundos)
     #    - 'response_size': El tamaño de la respuesta en bytes
     # 4. Devolver None si hay algún error
-    pass
+    try:
+        response = requests.get('https://api.ipify.org?format=json')
+        if response.status_code == 200:
+            return {
+                'content_type': response.headers.get('Content-Type'),
+                'elapsed_time': response.elapsed.total_seconds() * 1000,  # Convert to milliseconds
+                'response_size': len(response.content)
+            }
+        return None
+    except Exception as e:
+        print(f"Error obteniendo o leyendo la respuesta: {e}")
+        return None
 
 if __name__ == "__main__":
     # Ejemplo de uso de las funciones
