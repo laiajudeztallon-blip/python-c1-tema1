@@ -35,7 +35,14 @@ def get_stations_data():
     # 2. Verificar que la respuesta sea correcta (código 200)
     # 3. Extraer y devolver el objeto 'data' del JSON recibido
     # 4. Manejar posibles errores (conexión, formato, etc.)
-    pass
+    ry:
+        response = requests.get(url)
+        if response.status_code == 200:
+            json_data = response.json()
+            return json_data.get('data')
+        return None
+    except (requests.RequestException, ValueError):
+        return None
 
 
 def get_station_info(stations_data, station_id):
@@ -55,7 +62,13 @@ def get_station_info(stations_data, station_id):
     # 2. Buscar la estación con el ID proporcionado en la lista de estaciones
     # 3. Devolver la información completa de esa estación
     # 4. Si no existe, devolver None
-    pass
+    if not stations_data or not isinstance(stations_data, dict) or 'stations' not in stations_data:
+        return None
+
+    for station in stations_data['stations']:
+        if station.get('station_id') == station_id:
+            return station
+    return None
 
 
 def get_station_coordinates(station_info):
@@ -93,7 +106,15 @@ def create_stations_dataframe(stations_data):
     # 2. Crear una lista de diccionarios con la información básica de cada estación
     # 3. Convertir esa lista en un DataFrame de pandas
     # 4. El DataFrame debe tener las columnas: 'station_id', 'latitude', 'longitude', 'name'
-    pass
+    if not station_info or not isinstance(station_info, dict):
+        return None
+
+    lat = station_info.get('lat')
+    lon = station_info.get('lon')
+
+    if lat is not None and lon is not None:
+        return (lat, lon)
+    return None
 
 
 if __name__ == '__main__':
